@@ -1,9 +1,13 @@
 package jayfeng.com.meituan.manager.useraccesskey.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jayfeng.com.meituan.manager.useraccesskey.exception.RequestForbiddenException;
 import jayfeng.com.meituan.manager.useraccesskey.response.RequestFailMessage;
 import jayfeng.com.meituan.manager.useraccesskey.response.ResponseData;
 import jayfeng.com.meituan.manager.useraccesskey.response.ResponseMessage;
 import org.springframework.stereotype.Controller;
+
+import java.util.Map;
 
 /**
  * 基础控制层
@@ -47,4 +51,23 @@ public class BaseController {
         RequestFailMessage failMessage = new RequestFailMessage(failCode, message, type);
         return new ResponseMessage(getRequestCode(), REQUEST_FAIL, failMessage.getFailCode(), REQUEST_FAIL_STATUS, failMessage);
     }
+
+    /**
+     * 构建 page 对象
+     * @param paramsMap 参数
+     * @param <T> 泛型
+     * @return 返回 page 对象
+     */
+    protected <T> Page<T> getPage(Map<String, String> paramsMap) {
+        String currentPage = paramsMap.get("currentPage");
+        String pageSize = paramsMap.get("pageSize");
+        Page<T> page = null;
+        try {
+            page = new Page<>(Long.parseLong(currentPage), Long.parseLong(pageSize));
+        } catch (NumberFormatException e) {
+            throw new RequestForbiddenException("您无权访问该服务");
+        }
+        return page;
+    }
+
 }

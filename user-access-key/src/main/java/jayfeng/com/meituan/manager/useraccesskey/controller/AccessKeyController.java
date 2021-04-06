@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 短信密钥控制层
  * @author JayFeng
@@ -19,6 +21,17 @@ public class AccessKeyController extends BaseController {
 
     @Autowired
     private AccessKeyService accessKeyService;
+
+    /**
+     * 动态条件分页查询密钥
+     * @param paramsMap 查询条件
+     * @return 返回数据
+     */
+    @GetMapping("/findAccessKey")
+    public ResponseMessage findAccessKeys(@RequestParam Map<String, String> paramsMap) {
+        log.info("findAccessKeys 查询密钥 paramsMap: {}", paramsMap);
+        return requestSuccess(accessKeyService.findAccessKeys(paramsMap, getPage(paramsMap)));
+    }
 
     /**
      * 新增一个密钥

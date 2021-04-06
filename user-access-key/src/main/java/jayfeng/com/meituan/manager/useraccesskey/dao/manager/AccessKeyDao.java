@@ -1,10 +1,9 @@
-package jayfeng.com.meituan.manager.useraccesskey.dao.accesskey;
+package jayfeng.com.meituan.manager.useraccesskey.dao.manager;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import jayfeng.com.meituan.manager.useraccesskey.bean.AccessKey;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 短信密钥持久层
@@ -12,7 +11,7 @@ import java.util.List;
  * @date 2021/4/1
  */
 @Repository
-public interface AccessKeyDao {
+public interface AccessKeyDao extends BaseMapper<AccessKey> {
 
     /**
      * 新增一个密钥
@@ -21,21 +20,6 @@ public interface AccessKeyDao {
     @Insert("INSERT INTO `access_key`(`region_id`, `access_key_id`, `secret`, `type`, `create_time`, `update_time`) " +
             "VALUES(#{accessKey.regionId}, #{accessKey.accessKeyId}, #{accessKey.secret}, #{accessKey.type}, #{accessKey.createTime}, #{accessKey.updateTime})")
     void addAccessKey(@Param("accessKey") AccessKey accessKey);
-
-    /**
-     * 查询所有密钥
-     * @return 返回密钥列表
-     */
-    @Select("SELECT `id`, `region_id`, `access_key_id`, `secret`, `type` FROM `access_key`")
-    List<AccessKey> selectAllAccessKey();
-
-    /**
-     * 根据类型查询密钥
-     * @param type 类型
-     * @return 返回密钥列表
-     */
-    @Select("SELECT `id`, `region_id`, `access_key_id`, `secret`, `type` FROM `access_key` WHERE `type` = #{type}")
-    List<AccessKey> selectAccessKeyList(@Param("type") Integer type);
 
     /**
      * 根据 id 查询密钥

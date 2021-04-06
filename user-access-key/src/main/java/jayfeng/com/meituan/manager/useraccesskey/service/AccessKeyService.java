@@ -1,7 +1,11 @@
 package jayfeng.com.meituan.manager.useraccesskey.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jayfeng.com.meituan.manager.useraccesskey.bean.AccessKey;
-import jayfeng.com.meituan.manager.useraccesskey.dao.accesskey.AccessKeyDao;
+import jayfeng.com.meituan.manager.useraccesskey.dao.manager.AccessKeyDao;
+import jayfeng.com.meituan.manager.useraccesskey.exception.RequestForbiddenException;
 import jayfeng.com.meituan.manager.useraccesskey.handler.rabbitmq.SendMessageHandler;
 import jayfeng.com.meituan.manager.useraccesskey.response.ResponseData;
 import jayfeng.com.meituan.rpc.accesskey.service.RPCAccessKeyService;
@@ -9,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * 短信密钥业务逻辑
@@ -26,6 +32,32 @@ public class AccessKeyService {
 
     @DubboReference(version = "1.0.1")
     private RPCAccessKeyService rpcAccessKeyService;
+
+    /**
+     * 动态条件分页查询密钥
+     * @param paramsMap 查询条件
+     * @param findPage 分页
+     * @return 返回数据
+     */
+    public ResponseData findAccessKeys(Map<String, String> paramsMap, Page<AccessKey> findPage) {
+        String regionId = paramsMap.get("regionId");
+        String type = paramsMap.get("type");
+        QueryWrapper<AccessKey> queryWrapper = new QueryWrapper<>();
+        // 地区id
+        if (!ObjectUtils.isEmpty(regionId)) queryWrapper.eq("region_id", regionId);
+        // 密钥类型（0 代表作为短信验证码）
+        if (!ObjectUtils.isEmpty(type)) {
+            try {
+                queryWrapper.eq("type", Integer.parseInt(type));
+            } catch (NumberFormatException e) {
+                log.info("findAccessKeys 查询密钥数据失败, 参数异常, 请求不是来自流浪器, 拒绝处理");
+                throw new RequestForbiddenException("您无权访问该服务");
+            }
+        }
+        Page<AccessKey> dataPage = accessKeyDao.selectPage(findPage, queryWrapper);
+        log.info("findAccessKeys 密钥数据查询成功 total: {}", dataPage.getTotal());
+        return ResponseData.createSuccessResponseData("findAccessKeysInfo", dataPage);
+    }
 
     /**
      * 新增一个密钥

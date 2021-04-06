@@ -36,9 +36,9 @@ spring:
         test-on-return: false
         # 是否缓存 preparedStatement, 默认值为 false, 也就是 PSCache。PSCache 对支持游标的数据库性能提升巨大。 mysql5.5以下建议 false
         filter: true
-    access-key:
+    manager:
       type: com.alibaba.druid.pool.DruidDataSource
-      jdbc-url: jdbc:mysql://127.0.0.1:3306/meituan_manager_access_key?characterEncoding=utf-8
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/meituan_manager?characterEncoding=utf-8
       username: root
       password: root130626
       # 配置 druid 连接池

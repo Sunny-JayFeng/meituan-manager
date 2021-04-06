@@ -30,8 +30,8 @@ public class DatabaseConfig {
      * @return 返回数据源
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.access-key")
-    public DataSource accessKeyDataSource() {
+    @ConfigurationProperties("spring.datasource.manager")
+    public DataSource managerDataSource() {
         return DataSourceBuilder.create().build();
     }
 

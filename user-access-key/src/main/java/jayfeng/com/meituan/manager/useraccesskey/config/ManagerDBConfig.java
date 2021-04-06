@@ -14,26 +14,25 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * 普通用户数据源配置
  * @author JayFeng
- * @date 2021/4/5
+ * @date 2021/4/6
  */
 @Configuration
-@MapperScan(basePackages = "jayfeng.com.meituan.manager.useraccesskey.dao.user", sqlSessionFactoryRef = "userAccountSqlSessionFactory")
-public class UserAccountDBConfig {
+@MapperScan(basePackages = "jayfeng.com.meituan.manager.useraccesskey.dao.manager", sqlSessionFactoryRef = "managerSqlSessionFactory")
+public class ManagerDBConfig {
 
     @Autowired
-    @Qualifier("userAccountDataSource")
-    private DataSource userAccountDataSource;
+    @Qualifier("managerDataSource")
+    private DataSource managerDataSource;
 
     @Autowired
     @Qualifier("mybatisPlusPaginationInterceptor")
     private MybatisPlusInterceptor paginationInterceptor;
 
-    @Bean(name = "userAccountSqlSessionFactory")
-    public MybatisSqlSessionFactoryBean userAccountSqlSessionFactory() {
+    @Bean(name = "managerSqlSessionFactory")
+    public MybatisSqlSessionFactoryBean managerSqlSessionFactory() {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
-        factoryBean.setDataSource(userAccountDataSource);
+        factoryBean.setDataSource(managerDataSource);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
         factoryBean.setConfiguration(configuration);
@@ -42,7 +41,7 @@ public class UserAccountDBConfig {
     }
 
     @Bean
-    public SqlSessionTemplate userAccountSqlSessionTemplate(@Qualifier("userAccountSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate managerSqlSessionTemplate(@Qualifier("managerSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 

@@ -1,7 +1,10 @@
 package jayfeng.com.meituan.manager.useraccesskey.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jayfeng.com.meituan.manager.useraccesskey.bean.User;
 import jayfeng.com.meituan.manager.useraccesskey.dao.user.UserDao;
+import jayfeng.com.meituan.manager.useraccesskey.exception.RequestForbiddenException;
 import jayfeng.com.meituan.manager.useraccesskey.response.ResponseData;
 import jayfeng.com.meituan.manager.useraccesskey.util.PatternMatch;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,34 +31,40 @@ public class UserService {
     private PatternMatch patternMatch;
 
     /**
-     * 根据手机号获取用户
-     * @param phone 手机号
-     * @return 返回数据
+     * 动态调节分页查询用户信息
+     * @param paramsMap 参数
+     * @param findPage 分页
+     * @return 返回用户信息
      */
-    public ResponseData getUserByPhone(String phone) {
-        if (ObjectUtils.isEmpty(phone) || !patternMatch.isPhone(phone)) {
-            log.info("getUserByPhone 根据手机号获取用户失败, 手机号格式不正确, phone: {}", phone);
-            return ResponseData.createFailResponseData("getUserByPhoneInfo", null, "手机号格式不正确", "phone_error");
-        }
-        User user = userDao.selectUserByUserPhone(phone);
-        if (user == null) {
-            log.info("getUserByPhone 根据手机号获取用户失败, 不存在此用户");
-            return ResponseData.createFailResponseData("getUserByPhoneInfo", null, "用户不存在", "user_not_exists");
-        }
-        log.info("getUserByPhone 根据手机号获取用户成功, user: {}", user);
-        return ResponseData.createSuccessResponseData("getUserByPhoneInfo", user);
+    public ResponseData findUsers(Map<String, String> paramsMap, Page<User> findPage) {
+        String userName = paramsMap.get("userName"); // 用户名
+        String phone = paramsMap.get("phone"); // 电话
+        String email = paramsMap.get("email"); // 邮箱
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // 用户名查询
+        if (!ObjectUtils.isEmpty(userName)) queryWrapper.eq("user_name", userName);
+        // 手机号查询
+        if (!ObjectUtils.isEmpty(phone)) queryWrapper.eq("phone", phone);
+        // 邮箱查询
+        if (!ObjectUtils.isEmpty(email)) queryWrapper.eq("email", email);
+        Page<User> dataPage = userDao.selectPage(findPage, queryWrapper);
+        log.info("findUsers 用户数据查询成功 total: {}", dataPage.getTotal());
+        return ResponseData.createSuccessResponseData("findUsersInfo", dataPage);
     }
-
 
     /**
      * 根据用户 id 列表删除用户
-     * 由 rabbitMQ 发送消息来让删除 todo
+     * 由 rabbitMQ 发送消息来让删除
      * @param userIdSet 用户 id 列表
      */
     public void removeUserByIdList(Set<Integer> userIdSet) {
         log.info("removeUserByIdList 根据 id 集合删除用户 userIdSet: {}", userIdSet);
         String userIds = handleAppendUserIds(userIdSet);
         List<User> userList = userDao.selectUsersByUserIds(userIds);
+        if (userList.isEmpty()) {
+            log.info("removeUserByIdList 对象集合为空");
+            return;
+        }
         // 日志打印
         for (User user : userList) log.info("removeUserByIdList 待删除用户对象 user: {}", user);
         userDao.deleteUsesByIds(userIds);
@@ -73,7 +81,7 @@ public class UserService {
         StringBuilder strb = new StringBuilder();
         for (Integer userId : userIdSet) {
             strb.append(userId);
-            strb.append(", ");
+            strb.append(",");
         }
         String userIds = strb.substring(0, strb.length() - 1);
         log.info("handleAppendUserIds 用户 id 拼接结果 userIds: {}", userIdSet);
@@ -93,8 +101,8 @@ public class UserService {
         String operator = paramsMap.get("operator");
         String isValid = paramsMap.get("isValid");
         if (ObjectUtils.isEmpty(id) || ObjectUtils.isEmpty(operator) || ObjectUtils.isEmpty(isValid)) {
-            log.info("updateUserIsValid 更新用户是否有效失败，参数异常 id: {}, operator: {}, isValid: {}", id, operator, isValid);
-            return ResponseData.createFailResponseData("updateUserIsValidInfo", false, "参数异常", "params_exception");
+            log.info("updateUserIsValid 更新用户是否有效失败，参数异常, 请求不是来自浏览器");
+            throw new RequestForbiddenException("您无权访问该服务");
         }
         int userId = -1;
         int isValidValue = -1;
@@ -102,16 +110,16 @@ public class UserService {
             userId = Integer.parseInt(id);
             isValidValue = Integer.parseInt(isValid);
         } catch (NumberFormatException e) {
-            log.info("updateUserIsValid 更新用户是否有效失败, 参数异常 userId: {}", id);
-            return ResponseData.createFailResponseData("updateUserIsValidInfo", false, "参数异常", "params_exception");
+            log.info("updateUserIsValid 更新用户是否有效失败，参数异常, 请求不是来自浏览器");
+            throw new RequestForbiddenException("您无权访问该服务");
         }
         User user = userDao.selectUserByUserId(userId);
         if (user == null) {
-            log.info("updateUserIsValid 更新用户是否有效失败, 用户不存在");
-            return ResponseData.createFailResponseData("updateUserIsValidInfo", false, "参数异常", "params_exception");
+            log.info("updateUserIsValid 更新用户是否有效失败，参数异常, 请求不是来自浏览器");
+            throw new RequestForbiddenException("您无权访问该服务");
         }
         log.info("cancelUserAccount 更新用户是否有效 user: {}, isValid: {}, operator: {}", user, isValid, operator);
-        userDao.updateUserIsValid(userId, isValidValue);
+        userDao.updateUserIsValid(userId, isValidValue, System.currentTimeMillis());
         log.info("cancelUserAccount 更新用户是否有效成功 operator: {}", operator);
         return ResponseData.createSuccessResponseData("cancelUserAccountInfo", true);
     }

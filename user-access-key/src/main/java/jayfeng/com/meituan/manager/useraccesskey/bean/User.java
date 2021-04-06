@@ -46,7 +46,7 @@ public class User {
      * 0 否
      * 1 是
      */
-    private Integer isVIP;
+    private Integer isVip;
 
     /**
      * 是否自动续费

@@ -4,10 +4,7 @@ import jayfeng.com.meituan.manager.useraccesskey.response.ResponseMessage;
 import jayfeng.com.meituan.manager.useraccesskey.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -23,6 +20,17 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    /**
+     * 查询用户信息
+     * @param paramsMap 参数
+     * @return 返回数据
+     */
+    @GetMapping("/findUsers")
+    public ResponseMessage findUsers(@RequestParam Map<String, String> paramsMap) {
+        log.info("findUsers 查询用户信息 paramsMap: {}", paramsMap);
+        return requestSuccess(userService.findUsers(paramsMap, getPage(paramsMap)));
+    }
 
     /**
      * 更新用户是否有效
