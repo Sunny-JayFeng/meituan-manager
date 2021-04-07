@@ -16,7 +16,7 @@ import org.springframework.util.ObjectUtils;
 public class EncryptUtil {
 
     @Autowired
-    private static RandomUtil randomUtil = new RandomUtil();
+    private RandomUtil randomUtil;
 
     private static final int SALT_LENGTH = 22;
 
@@ -105,20 +105,9 @@ public class EncryptUtil {
         return encryptedPassword.substring(0, SALT_LENGTH);
     }
 
-    public void main(String[] args) {
-//        String password = "123456789";
-//        String result1 = EncryptUtil.encrypt(password);
-//        String result2 = EncryptUtil.encrypt(password);
-//        String result3 = EncryptUtil.encrypt(password);
-//        String result4 = EncryptUtil.encrypt(password);
-//        System.out.println(result1);
-//        System.out.println(result2);
-//        System.out.println(result3);
-//        System.out.println(result4);
-//
-//        System.out.println(EncryptUtil.matches(password, result1));
-//        System.out.println(EncryptUtil.matches(password, result2));
-//        System.out.println(EncryptUtil.matches("12345678", result3));
-//        System.out.println(EncryptUtil.matches("ABC123", result4));
+    public static void main(String[] args) {
+        EncryptUtil encryptUtil = new EncryptUtil();
+        System.out.println(encryptUtil.encrypt("123456"));
     }
+
 }

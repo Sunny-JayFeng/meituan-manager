@@ -7,7 +7,9 @@ package jayfeng.com.meituan.manager.useraccesskey.constant;
  */
 public enum RedisConstant {
 
-    MANAGER_UUID_MAP("adminUUIDMap"),
+    MANAGER_UUID_MAP("managerUUIDMap"),
+
+    API_MAP("apiMap"), // 接口权限map
 
     IDENTIFY_TIMEOUT(60 * 10L); // 验证码的过期时间
 

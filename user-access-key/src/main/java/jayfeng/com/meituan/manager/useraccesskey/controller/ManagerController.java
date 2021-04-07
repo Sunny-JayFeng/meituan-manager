@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/meituan/manager")
+@RequestMapping("/meituan/manager/login_logout")
 public class ManagerController extends BaseController {
 
     @Autowired

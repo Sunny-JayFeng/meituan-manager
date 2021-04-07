@@ -2,12 +2,14 @@ package jayfeng.com.meituan.manager.useraccesskey.aaspect;
 
 import jayfeng.com.meituan.manager.useraccesskey.exception.RequestForbiddenException;
 import jayfeng.com.meituan.manager.useraccesskey.exception.ServerBusyException;
+import jayfeng.com.meituan.manager.useraccesskey.util.RequestThreadLocalManagement;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -28,8 +30,8 @@ import java.util.Map;
 @Slf4j
 public class ControllerAspect {
 
-    // 存放每个线程来请求的开始时间 key 为线程 id
-    private Map<Long, ThreadLocal<Long>> threadLocalMap = new HashMap<>(16384);
+    @Autowired
+    private RequestThreadLocalManagement requestThreadLocalManagement;
 
     /**
      * 配置切点
@@ -51,15 +53,12 @@ public class ControllerAspect {
      */
     @Before("requestInterface()")
     public void requestInterfaceDoBefore(JoinPoint joinPoint) {
-        ThreadLocal<Long> startTimeThreadLocal = new ThreadLocal<>();
-        startTimeThreadLocal.set(System.currentTimeMillis());
-        threadLocalMap.put(Thread.currentThread().getId(), startTimeThreadLocal);
-
         HttpServletRequest request = this.getHttpServletRequest();
         if (!isRequestFromBrowser(request)) {
             log.info("请求不是来自浏览器, 拒绝处理");
             throw new RequestForbiddenException("您无权访问该服务");
         }
+        requestThreadLocalManagement.requestStart();
     }
 
     /**
@@ -108,8 +107,7 @@ public class ControllerAspect {
      */
     @AfterReturning(returning = "result", pointcut = "requestInterface()")
     public void requestInterfaceDoAfterReturning(Object result) {
-        ThreadLocal<Long> startTimeThreadLocal = threadLocalMap.get(Thread.currentThread().getId());
-        log.info("请求耗时: {}ms", System.currentTimeMillis() - startTimeThreadLocal.get());
+        log.info("请求耗时: {}ms", requestThreadLocalManagement.getRequestUseTime());
         log.info("请求结果: {}", result);
     }
 

@@ -1,4 +1,4 @@
-package jayfeng.com.meituan.manager.useraccesskey.service;
+package jayfeng.com.meituan.manager.useraccesskey.service.impl;
 
 import jayfeng.com.meituan.manager.useraccesskey.bean.User;
 import jayfeng.com.meituan.manager.useraccesskey.dao.user.UserDao;

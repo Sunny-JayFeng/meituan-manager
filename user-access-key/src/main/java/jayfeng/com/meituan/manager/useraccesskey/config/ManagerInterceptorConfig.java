@@ -25,10 +25,10 @@ public class ManagerInterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(managerInterceptor)
                 .addPathPatterns("/meituan/manager/**")
-                .excludePathPatterns("/meituan/manager/login",
-                        "/meituan/manager/*.html",
-                        "/meituan/manager/*.css",
-                        "/meituan/manager/*.js");
+                .excludePathPatterns("/meituan/manager/login_logout/managerLogin",
+                        "/meituan/manager/login_logout/*.html",
+                        "/meituan/manager/login_logout/*.css",
+                        "/meituan/manager/login_logout/*.js");
     }
 
 }

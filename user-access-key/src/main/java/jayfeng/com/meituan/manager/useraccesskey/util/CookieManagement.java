@@ -49,7 +49,7 @@ public class CookieManagement {
             for (Cookie cookie : cookies) {
                 String key = cookie.getName();
                 if (cookieKey.equals(key)) {
-                    return redisService.getUserJSON(redisMapKey, cookie.getValue());
+                    return redisService.getManagerJSON(redisMapKey, cookie.getValue());
                 }
             }
         }

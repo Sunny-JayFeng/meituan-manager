@@ -36,7 +36,6 @@ public class UserController extends BaseController {
      * 更新用户是否有效
      * @param paramsMap 参数
      * 用户 id
-     * 操作人 operator
      * 是否有效 isValid
      * @return 返回更新结果
      */

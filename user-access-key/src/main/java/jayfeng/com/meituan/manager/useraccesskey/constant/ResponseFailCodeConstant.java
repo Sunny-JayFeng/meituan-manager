@@ -15,6 +15,8 @@ public enum ResponseFailCodeConstant {
 
     REQUEST_FORBIDDEN(403),
 
+    REQUEST_PATH_NOT_FOUND(404),
+
     METHOD_NOT_SUPPORTED(405);
 
     private Integer responseCode;
