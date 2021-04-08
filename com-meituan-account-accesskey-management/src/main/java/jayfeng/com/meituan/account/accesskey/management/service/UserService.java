@@ -30,7 +30,7 @@ public interface UserService {
      * 由 rabbitMQ 发送消息来让删除
      * @param userIdSet 用户 id 列表
      */
-    @Transactional(transactionManager = "userAccountTransactionManager")
+    @Transactional(transactionManager = "userTransactionManager")
     void removeUserByIdList(Set<Integer> userIdSet);
 
     /**
@@ -40,7 +40,7 @@ public interface UserService {
      * 是否有效 isValid
      * @return 返回更新结果
      */
-    @Transactional(transactionManager = "userAccountTransactionManager")
+    @Transactional(transactionManager = "userTransactionManager")
     ResponseData updateUserIsValid(Map<String, String> paramsMap);
 
 }

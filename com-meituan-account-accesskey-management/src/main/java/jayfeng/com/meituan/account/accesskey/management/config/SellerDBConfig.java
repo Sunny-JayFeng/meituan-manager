@@ -14,27 +14,28 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
+
 /**
- * 管理员数据源配置
+ * 商家数据源配置
  * @author JayFeng
- * @date 2021/4/6
+ * @date 2021/4/8
  */
 @Configuration
-@MapperScan(basePackages = "jayfeng.com.meituan.account.accesskey.management.dao.manager", sqlSessionFactoryRef = "managerSqlSessionFactory")
-public class ManagerDBConfig {
+@MapperScan(basePackages = "jayfeng.com.meituan.account.accesskey.management.dao.seller", sqlSessionFactoryRef = "sellerSqlSessionFactory")
+public class SellerDBConfig {
 
     @Autowired
-    @Qualifier("managerDataSource")
-    private DataSource managerDataSource;
+    @Qualifier("sellerDataSource")
+    private DataSource sellerDataSource;
 
     @Autowired
     @Qualifier("mybatisPlusPaginationInterceptor")
     private MybatisPlusInterceptor paginationInterceptor;
 
-    @Bean(name = "managerSqlSessionFactory")
-    public MybatisSqlSessionFactoryBean managerSqlSessionFactory() {
+    @Bean(name = "sellerSqlSessionFactory")
+    public MybatisSqlSessionFactoryBean sellerSqlSessionFactory() {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
-        factoryBean.setDataSource(managerDataSource);
+        factoryBean.setDataSource(sellerDataSource);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
         factoryBean.setConfiguration(configuration);
@@ -43,13 +44,13 @@ public class ManagerDBConfig {
     }
 
     @Bean
-    public SqlSessionTemplate managerSqlSessionTemplate(@Qualifier("managerSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate sellerSqlSessionTemplate(@Qualifier("sellerSqlSessionFactory")SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
     @Bean
-    public DataSourceTransactionManager managerTransactionManager() {
-        return new DataSourceTransactionManager(managerDataSource);
+    public DataSourceTransactionManager sellerTransactionManager() {
+        return new DataSourceTransactionManager(sellerDataSource);
     }
 
 }

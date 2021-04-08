@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
      * @param userIdSet 用户 id 列表
      */
     @Override
-    @Transactional(transactionManager = "userAccountTransactionManager")
+    @Transactional(transactionManager = "userTransactionManager")
     public void removeUserByIdList(Set<Integer> userIdSet) {
         log.info("removeUserByIdList 根据 id 集合删除用户 userIdSet: {}", userIdSet);
         String userIds = handleAppendUserIds(userIdSet);
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
      * @return 返回更新结果
      */
     @Override
-    @Transactional(transactionManager = "userAccountTransactionManager")
+    @Transactional(transactionManager = "userTransactionManager")
     public ResponseData updateUserIsValid(Map<String, String> paramsMap) {
         String id = paramsMap.get("userId");
         String isValid = paramsMap.get("isValid");

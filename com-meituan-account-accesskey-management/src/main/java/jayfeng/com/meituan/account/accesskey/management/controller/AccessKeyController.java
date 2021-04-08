@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/meituan/manager/user_accessKey/accessKey")
+@RequestMapping("/meituan/manager/accessKeyManagement")
 public class AccessKeyController extends BaseController {
 
     @Autowired

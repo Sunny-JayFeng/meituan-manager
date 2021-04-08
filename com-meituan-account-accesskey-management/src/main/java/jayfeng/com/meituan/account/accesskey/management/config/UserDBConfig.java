@@ -20,21 +20,21 @@ import javax.sql.DataSource;
  * @date 2021/4/5
  */
 @Configuration
-@MapperScan(basePackages = "jayfeng.com.meituan.manager.useraccesskey.dao.user", sqlSessionFactoryRef = "userAccountSqlSessionFactory")
-public class UserAccountDBConfig {
+@MapperScan(basePackages = "jayfeng.com.meituan.account.accesskey.management.dao.user", sqlSessionFactoryRef = "userSqlSessionFactory")
+public class UserDBConfig {
 
     @Autowired
-    @Qualifier("userAccountDataSource")
-    private DataSource userAccountDataSource;
+    @Qualifier("userDataSource")
+    private DataSource userDataSource;
 
     @Autowired
     @Qualifier("mybatisPlusPaginationInterceptor")
     private MybatisPlusInterceptor paginationInterceptor;
 
-    @Bean(name = "userAccountSqlSessionFactory")
-    public MybatisSqlSessionFactoryBean userAccountSqlSessionFactory() {
+    @Bean(name = "userSqlSessionFactory")
+    public MybatisSqlSessionFactoryBean userSqlSessionFactory() {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
-        factoryBean.setDataSource(userAccountDataSource);
+        factoryBean.setDataSource(userDataSource);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
         factoryBean.setConfiguration(configuration);
@@ -43,13 +43,13 @@ public class UserAccountDBConfig {
     }
 
     @Bean
-    public SqlSessionTemplate userAccountSqlSessionTemplate(@Qualifier("userAccountSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate userSqlSessionTemplate(@Qualifier("userSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
     @Bean
-    public DataSourceTransactionManager userAccountTransactionManager() {
-        return new DataSourceTransactionManager(userAccountDataSource);
+    public DataSourceTransactionManager userTransactionManager() {
+        return new DataSourceTransactionManager(userDataSource);
     }
 
 }

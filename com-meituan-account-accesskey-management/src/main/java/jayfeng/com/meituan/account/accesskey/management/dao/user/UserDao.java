@@ -19,7 +19,7 @@ import java.util.List;
 public interface UserDao extends BaseMapper<User> {
 
     /**
-     * 根据 id 查找用户对象 (用于删除用户的时候查询)
+     * 根据 id 查找用户对象
      * @param userId 用户 id
      * @return 返回用户对象
      */
@@ -36,7 +36,7 @@ public interface UserDao extends BaseMapper<User> {
 
     /**
      * 查询已经注销 14 天的用户，删除
-     * @param updateTime 更新时间
+     * @param updateTime 当前时间
      * @return 返回用户列表
      */
     @Select("SELECT * FROM `user` WHERE `is_valid` = 0 AND `update_time` < #{updateTime}")

@@ -20,8 +20,8 @@ public class DatabaseConfig {
      * @return 返回数据源
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.user-account")
-    public DataSource userAccountDataSource() {
+    @ConfigurationProperties("spring.datasource.user")
+    public DataSource userDataSource() {
         return DataSourceBuilder.create().build();
     }
 
@@ -32,6 +32,16 @@ public class DatabaseConfig {
     @Bean
     @ConfigurationProperties("spring.datasource.manager")
     public DataSource managerDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    /**
+     * 商家数据源
+     * @return
+     */
+    @Bean
+    @ConfigurationProperties("spring.datasource.seller")
+    public DataSource sellerDataSource() {
         return DataSourceBuilder.create().build();
     }
 

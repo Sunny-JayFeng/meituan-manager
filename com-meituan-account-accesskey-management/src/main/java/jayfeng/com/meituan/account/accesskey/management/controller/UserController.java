@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/meituan/manager/user_accessKey/manage_user")
+@RequestMapping("/meituan/manager/userManagement")
 public class UserController extends BaseController {
 
     @Autowired
