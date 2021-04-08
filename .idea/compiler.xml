@@ -6,15 +6,21 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="E:/gradle/gradle-6.5-all/gradle-6.5/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.4.3/d4bb8ef775bcf06ac9a4fdc400a8b2404259c457/spring-boot-configuration-processor-2.4.3.jar" />
+          <entry name="E:/gradle/gradle-6.5-all/gradle-6.5/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.4.4/f5ccf587cef8b29eb6cadb9b26123256adbdf9c4/spring-boot-configuration-processor-2.4.4.jar" />
           <entry name="E:/gradle/gradle-6.5-all/gradle-6.5/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.18/481f5bfed3ae29f656eedfe9e98c8365b8ba5c57/lombok-1.18.18.jar" />
         </processorPath>
-        <module name="user-access-key.main" />
+        <module name="com-meituan-account-accesskey-management.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="com-meituan-manager-user-seller-manager-accesskey-management.main" target="1.8" />
+      <module name="com-meituan-manager-user-seller-manager-accesskey-management.test" target="1.8" />
+      <module name="jayfeng.com.meituan.manager.user-access-key.main" target="1.8" />
+      <module name="jayfeng.com.meituan.manager.user-access-key.test" target="1.8" />
       <module name="user-access-key.aot" target="1.8" />
       <module name="user-access-key.aotTest" target="1.8" />
+      <module name="user-access-key.main" target="1.8" />
+      <module name="user-access-key.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

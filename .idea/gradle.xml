@@ -15,13 +15,12 @@
         <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="disableWrapperSourceDistributionNotification" value="true" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/user-access-key" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/com-meituan-account-accesskey-management" />
         <option name="gradleHome" value="E:/gradle/gradle-6.5-all/gradle-6.5" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/user-access-key" />
+            <option value="$PROJECT_DIR$/com-meituan-account-accesskey-management" />
           </set>
         </option>
         <option name="useQualifiedModuleNames" value="true" />
