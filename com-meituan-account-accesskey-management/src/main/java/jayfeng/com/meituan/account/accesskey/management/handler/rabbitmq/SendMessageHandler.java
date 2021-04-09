@@ -31,11 +31,21 @@ public class SendMessageHandler {
     }
 
     /**
-     * 定时执行, 删除已经注销14天的用户
+     * 发布消息, 删除已经注销14天的用户
+     * @param userIdSet 用户 id 列表
      */
     public void sendDeleteUsersMessage(Set<Integer> userIdSet) {
         log.info("sendDeleteUsersMessage 发布消息, 删除注销超过 14 天的用户 userIdSet: {}", userIdSet);
         rabbitTemplate.convertAndSend(RabbitMQConstant.DELETE_USER_MESSAGE_QUEUE, userIdSet);
+    }
+
+    /**
+     * 发布消息, 删除已经注销 14 天的商家
+     * @param sellerIdSet 商家 id 列表
+     */
+    public void sendDeleteSellersMessage(Set<Integer> sellerIdSet) {
+        log.info("sendDeleteSellersMessage 发布消息, 删除注销超过 14 天的商家 sellerIdSet: {}", sellerIdSet);
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DELETE_SELLER_MESSAGE_QUEUE, sellerIdSet);
     }
 
 }

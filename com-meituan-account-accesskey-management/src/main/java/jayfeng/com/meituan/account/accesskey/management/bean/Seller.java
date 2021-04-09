@@ -1,10 +1,13 @@
 package jayfeng.com.meituan.account.accesskey.management.bean;
 
+import lombok.Data;
+
 /**
  * 商家
  * @author JayFeng
  * @date 2021/4/8
  */
+@Data
 public class Seller {
 
     /**

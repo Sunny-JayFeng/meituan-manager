@@ -14,4 +14,7 @@ public class RabbitMQConstant {
 
     // 删除用户消息队列
     public static final String DELETE_USER_MESSAGE_QUEUE = "delete_users";
+
+    // 删除商家消息队列
+    public static final String DELETE_SELLER_MESSAGE_QUEUE = "delete_sellers";
 }

@@ -19,4 +19,8 @@ public class RabbitMQConfig {
         return new Queue(RabbitMQConstant.DELETE_USER_MESSAGE_QUEUE);
     }
 
+    @Bean
+    public Queue deleteSellersQueue() {
+        return new Queue(RabbitMQConstant.DELETE_SELLER_MESSAGE_QUEUE);
+    }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 public interface UserService {
 
     /**
-     * 动态调节分页查询用户信息
+     * 动态条件分页查询用户信息
      * @param paramsMap 参数
      * @param findPage 分页
      * @return 返回用户信息

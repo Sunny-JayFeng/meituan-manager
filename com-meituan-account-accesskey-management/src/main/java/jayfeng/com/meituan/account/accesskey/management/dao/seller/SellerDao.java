@@ -41,7 +41,7 @@ public interface SellerDao extends BaseMapper<Seller> {
      * @return 返回商家列表
      */
     @Select("SELECT `id`, `name`, `age`, `phone`, `id_card`, `is_valid`, `create_time`, `update_time` " +
-            "FROM `seller` WHERE `is_valid` = 0 AND `update_time` = #{updateTime}")
+            "FROM `seller` WHERE `is_valid` = 0 AND `update_time` < #{updateTime}")
     List<Seller> selectInvalidSellersToDelete(@Param("updateTime") Long updateTime);
 
     /**

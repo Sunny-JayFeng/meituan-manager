@@ -1,6 +1,8 @@
 package jayfeng.com.meituan.account.accesskey.management.service.impl;
 
+import jayfeng.com.meituan.account.accesskey.management.bean.Seller;
 import jayfeng.com.meituan.account.accesskey.management.bean.User;
+import jayfeng.com.meituan.account.accesskey.management.dao.seller.SellerDao;
 import jayfeng.com.meituan.account.accesskey.management.dao.user.UserDao;
 import jayfeng.com.meituan.account.accesskey.management.handler.rabbitmq.SendMessageHandler;
 import jayfeng.com.meituan.account.accesskey.management.redis.RedisService;
@@ -31,6 +33,8 @@ public class TimedTask {
     @Autowired
     private UserDao userDao;
     @Autowired
+    private SellerDao sellerDao;
+    @Autowired
     private RedisService redisService;
 
     /**
@@ -43,15 +47,32 @@ public class TimedTask {
     private void timedDeleteUser() {
         List<User> invalidUserList = userDao.selectInvalidUsersToDelete(System.currentTimeMillis() - FOURTEEN_DAY_MS);
         if (invalidUserList.isEmpty()) {
-            log.info("timedDeleteUser 没有注销超过 14 天的用户, 无需发布删除用户的消息");
-            return;
+            log.info("timedDeleteUser 定时查出注销超过 14 天的用户 size: {}", invalidUserList.size());
+            Set<Integer> userIdSet = new HashSet<>();
+            for (User user : invalidUserList) {
+                userIdSet.add(user.getId());
+            }
+            sendMessageHandler.sendDeleteUsersMessage(userIdSet);
         }
-        log.info("timedDeleteUser 定时查出注销超过 14 天的用户 size: {}", invalidUserList.size());
-        Set<Integer> userIdSet = new HashSet<>();
-        for (User user : invalidUserList) {
-            userIdSet.add(user.getId());
+    }
+
+    /**
+     * 深夜 3：30执行
+     * 查询已经注销 14 天的商家
+     * 若有 rabbitMQ发布删除消息
+     * 若无 不做处理
+     */
+    @Scheduled(cron = "0 30 3 * * ?")
+    private void timedDeleteSeller() {
+        List<Seller> invalidSellerList = sellerDao.selectInvalidSellersToDelete(System.currentTimeMillis() - FOURTEEN_DAY_MS);
+        if (!invalidSellerList.isEmpty()) {
+            log.info("timedDeleteSeller 定时查出注销超过 14 天的用户 size: {}", invalidSellerList.size());
+            Set<Integer> sellerIdSet = new HashSet<>();
+            for (Seller seller : invalidSellerList) {
+                sellerIdSet.add(seller.getId());
+            }
+            sendMessageHandler.sendDeleteSellersMessage(sellerIdSet);
         }
-        sendMessageHandler.sendDeleteUsersMessage(userIdSet);
     }
 
     /**

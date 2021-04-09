@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
             strb.append(",");
         }
         String userIds = strb.substring(0, strb.length() - 1);
-        log.info("handleAppendUserIds 用户 id 拼接结果 userIds: {}", userIdSet);
+        log.info("handleAppendUserIds 用户 id 拼接结果 userIds: {}", userIds);
         return userIds;
     }
 
@@ -123,9 +123,9 @@ public class UserServiceImpl implements UserService {
             log.info("updateUserIsValid 更新用户是否有效失败，参数异常, 请求非法");
             throw new RequestForbiddenException("您无权访问该服务");
         }
-        log.info("cancelUserAccount 更新用户是否有效 user: {}, isValid: {}", user, isValid);
+        log.info("updateUserIsValid 更新用户是否有效 user: {}, isValid: {}", user, isValid);
         userDao.updateUserIsValid(userId, isValidValue, System.currentTimeMillis());
-        log.info("cancelUserAccount 更新用户是否有效成功 操作人: {}", requestThreadLocalManagement.getRequesterName());
+        log.info("updateUserIsValid 更新用户是否有效成功 操作人: {}", requestThreadLocalManagement.getRequesterName());
         return ResponseData.createSuccessResponseData("cancelUserAccountInfo", true);
     }
 
