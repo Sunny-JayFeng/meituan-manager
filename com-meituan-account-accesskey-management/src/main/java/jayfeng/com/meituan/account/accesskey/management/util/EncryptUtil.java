@@ -1,5 +1,6 @@
 package jayfeng.com.meituan.account.accesskey.management.util;
 
+import jayfeng.com.meituan.account.accesskey.management.exception.ParamEmptyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.util.ObjectUtils;
 /**
  * 加密工具类
  * @author JayFeng
- * @date 2021/1/29
+ * @date 2021/4/1
  */
 @Component
 @Slf4j
@@ -32,10 +33,10 @@ public class EncryptUtil {
     public String encrypt(String password) {
         String salt = getSalt();
         if (ObjectUtils.isEmpty(password)) {
-            // 抛出异常
+            throw new ParamEmptyException("必要参数 password 为空");
         }
         if (ObjectUtils.isEmpty(salt)) {
-            // 抛出异常
+            throw new ParamEmptyException("必要参数 salt 为空");
         }
         return encrypt(password, salt);
     }
@@ -48,10 +49,10 @@ public class EncryptUtil {
      */
     public boolean matches(String password, String encryptedPassword) {
         if (ObjectUtils.isEmpty(password)) {
-            // 抛出异常
+            throw new ParamEmptyException("必要参数 password 为空");
         }
         if (ObjectUtils.isEmpty(encryptedPassword)) {
-            // 抛出异常
+            throw new ParamEmptyException("必要参数 encryptedPassword 为空");
         }
         String salt = getSalt(encryptedPassword);
         String encryptResult = encrypt(password, salt);

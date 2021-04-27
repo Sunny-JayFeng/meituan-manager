@@ -10,7 +10,7 @@ import java.util.Random;
  * 用于密码加密的随机盐
  * 用户注册时的随机昵称
  * @author JayFeng
- * @date 2021/1/29
+ * @date 2021/4/1
  */
 @Component
 @Slf4j
