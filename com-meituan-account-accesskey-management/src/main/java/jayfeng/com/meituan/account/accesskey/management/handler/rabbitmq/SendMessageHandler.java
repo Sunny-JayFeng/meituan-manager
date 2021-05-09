@@ -48,4 +48,13 @@ public class SendMessageHandler {
         rabbitTemplate.convertAndSend(RabbitMQConstant.DELETE_SELLER_MESSAGE_QUEUE, sellerIdSet);
     }
 
+    /**
+     * 发布消息, 删除已经注销 14 天的骑手
+     * @param courierIdSet 骑手 id 列表
+     */
+    public void sendDeleteCourierMessage(Set<Integer> courierIdSet) {
+        log.info("sendDeleteCourierMessage 发布消息, 删除注销超过 14 天的骑手 courierIdSet: {}", courierIdSet);
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DELETE_COURIER_MESSAGE_QUEUE, courierIdSet);
+    }
+
 }

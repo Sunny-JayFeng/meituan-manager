@@ -1,6 +1,7 @@
 package jayfeng.com.meituan.account.accesskey.management.handler.rabbitmq;
 
 import jayfeng.com.meituan.account.accesskey.management.constant.RabbitMQConstant;
+import jayfeng.com.meituan.account.accesskey.management.service.CourierService;
 import jayfeng.com.meituan.account.accesskey.management.service.SellerService;
 import jayfeng.com.meituan.account.accesskey.management.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public class ReceiveMessageHandler {
     @Autowired
     private SellerService sellerService;
 
+    @Autowired
+    private CourierService courierService;
+
     /**
      * 监听删除用户消息
      * @param userIdSet 待删除对象 id 列表
@@ -44,5 +48,17 @@ public class ReceiveMessageHandler {
         log.info("receiveDeleteSellersMessage 接收到删除商家的消息 sellerIdSet: {}", sellerIdSet);
         sellerService.removeSellerByIdList(sellerIdSet);
     }
+
+    /**
+     * 监听删除骑手消息
+     * @param courierIdSet 待删除骑手 id 列表
+     */
+    @RabbitListener(queues = RabbitMQConstant.DELETE_COURIER_MESSAGE_QUEUE)
+    public void receiveDeleteCouriersMessage(Set<Integer> courierIdSet) {
+        log.info("receiveDeleteCouriersMessage 接收到删除骑手的消息 courierIdSet: {}", courierIdSet);
+        courierService.removeCourierByIdList(courierIdSet);
+    }
+
+
 
 }

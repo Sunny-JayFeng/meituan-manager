@@ -1,7 +1,9 @@
 package jayfeng.com.meituan.account.accesskey.management.service.impl;
 
+import jayfeng.com.meituan.account.accesskey.management.bean.Courier;
 import jayfeng.com.meituan.account.accesskey.management.bean.Seller;
 import jayfeng.com.meituan.account.accesskey.management.bean.User;
+import jayfeng.com.meituan.account.accesskey.management.dao.courier.CourierDao;
 import jayfeng.com.meituan.account.accesskey.management.dao.seller.SellerDao;
 import jayfeng.com.meituan.account.accesskey.management.dao.user.UserDao;
 import jayfeng.com.meituan.account.accesskey.management.handler.rabbitmq.SendMessageHandler;
@@ -34,6 +36,8 @@ public class TimedTask {
     private UserDao userDao;
     @Autowired
     private SellerDao sellerDao;
+    @Autowired
+    private CourierDao courierDao;
     @Autowired
     private RedisService redisService;
 
@@ -72,6 +76,25 @@ public class TimedTask {
                 sellerIdSet.add(seller.getId());
             }
             sendMessageHandler.sendDeleteSellersMessage(sellerIdSet);
+        }
+    }
+
+    /**
+     * 深夜 3：40执行
+     * 查询已经注销 14 天的骑手
+     * 若有 rabbitMQ 发布删除消息
+     * 若无 不做处理
+     */
+    @Scheduled(cron = "0 40 3 * * ?")
+    private void timedDeleteCourier() {
+        List<Courier> invalidCourierList = courierDao.selectInValidCourierToDelete(System.currentTimeMillis());
+        if (!invalidCourierList.isEmpty()) {
+            log.info("timedDeleteCourier 定时查出注销超过 14 天的骑手 size: {}", invalidCourierList.size());
+            Set<Integer> courierIdSet = new HashSet<>();
+            for (Courier courier : invalidCourierList) {
+                courierIdSet.add(courier.getId());
+            }
+            sendMessageHandler.sendDeleteCourierMessage(courierIdSet);
         }
     }
 

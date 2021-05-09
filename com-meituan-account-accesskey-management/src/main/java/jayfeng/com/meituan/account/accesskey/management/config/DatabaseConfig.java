@@ -45,4 +45,14 @@ public class DatabaseConfig {
         return DataSourceBuilder.create().build();
     }
 
+    /**
+     * 骑手数据源
+     * @return
+     */
+    @Bean
+    @ConfigurationProperties("spring.datasource.courier")
+    public DataSource courierDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
 }
